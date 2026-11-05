@@ -14,8 +14,8 @@ export type {
   TaskTransitionRule,
   TaskWithRelations,
 } from './model'
+export { taskKeys } from './keys'
 export {
-  taskKeys,
   useCreateTask,
   useDeleteTask,
   useTask,

@@ -1,12 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { profileApi } from './api'
-
-export const profileKeys = {
-  all: ['profiles'] as const,
-  detail: (id: string) => [...profileKeys.all, 'detail', id] as const,
-  executors: () => [...profileKeys.all, 'executors'] as const,
-}
+import { profileKeys } from './keys'
 
 export function useProfile(id: string | undefined) {
   return useQuery({

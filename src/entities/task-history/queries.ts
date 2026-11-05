@@ -1,11 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { taskHistoryApi } from './api'
-
-export const taskHistoryKeys = {
-  all: ['task-history'] as const,
-  byTask: (taskId: string) => [...taskHistoryKeys.all, taskId] as const,
-}
+import { taskHistoryKeys } from './keys'
 
 export function useTaskHistory(taskId: string) {
   return useQuery({

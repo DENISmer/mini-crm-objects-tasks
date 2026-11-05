@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -10,7 +9,6 @@ import {
   type AvailableTransition,
   type Task,
 } from '@/entities/task'
-import { taskHistoryKeys } from '@/entities/task-history'
 import { useCurrentProfile } from '@/features/auth'
 import { toUserMessage } from '@/shared/api/errors'
 import { Button } from '@/shared/ui/button'
@@ -31,7 +29,6 @@ export function TaskActions({ task }: TaskActionsProps) {
   const profile = useCurrentProfile()
   const rulesQuery = useTransitionRules()
   const transition = useTransitionTask()
-  const queryClient = useQueryClient()
   const [commentFor, setCommentFor] = useState<AvailableTransition | null>(null)
 
   if (rulesQuery.isPending) return <Skeleton className="h-8 w-40" />
@@ -46,7 +43,6 @@ export function TaskActions({ task }: TaskActionsProps) {
   const run = async (action: AvailableTransition, comment?: string) => {
     try {
       await transition.mutateAsync({ taskId: task.id, to: action.to, comment })
-      await queryClient.invalidateQueries({ queryKey: taskHistoryKeys.byTask(task.id) })
       setCommentFor(null)
       toast.success(`Статус: ${TASK_STATUS_LABELS[action.to]}`)
     } catch (error) {

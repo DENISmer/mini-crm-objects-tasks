@@ -1,17 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { objectKeys } from '@/entities/object'
-
 import { taskApi } from './api'
+import { forgetTask, invalidateAfterTransition, invalidateTasks } from './cache'
+import { taskKeys } from './keys'
 import type { TaskInput } from './model'
-
-export const taskKeys = {
-  all: ['tasks'] as const,
-  byObject: (objectId: string) => [...taskKeys.all, 'by-object', objectId] as const,
-  byAssignee: (userId: string) => [...taskKeys.all, 'by-assignee', userId] as const,
-  detail: (id: string) => [...taskKeys.all, 'detail', id] as const,
-  transitionRules: ['task-transition-rules'] as const,
-}
 
 export function useTasksByObject(objectId: string) {
   return useQuery({
@@ -40,35 +32,31 @@ export function useTransitionRules() {
   })
 }
 
-/** Любое изменение задач влияет на видимость объектов и счётчики, поэтому сбрасываем и их. */
-function useInvalidateTasks() {
-  const queryClient = useQueryClient()
-  return () =>
-    Promise.all([
-      queryClient.invalidateQueries({ queryKey: taskKeys.all }),
-      queryClient.invalidateQueries({ queryKey: objectKeys.all }),
-    ])
-}
-
 export function useCreateTask() {
-  const invalidate = useInvalidateTasks()
-  return useMutation({ mutationFn: taskApi.create, onSuccess: invalidate })
+  const queryClient = useQueryClient()
+  return useMutation({ mutationFn: taskApi.create, onSuccess: () => invalidateTasks(queryClient) })
 }
 
 export function useUpdateTask() {
-  const invalidate = useInvalidateTasks()
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: TaskInput }) => taskApi.update(id, input),
-    onSuccess: invalidate,
+    onSuccess: () => invalidateTasks(queryClient),
   })
 }
 
 export function useDeleteTask() {
-  const invalidate = useInvalidateTasks()
-  return useMutation({ mutationFn: taskApi.remove, onSuccess: invalidate })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: taskApi.remove,
+    onSuccess: (_result, id) => forgetTask(queryClient, id),
+  })
 }
 
 export function useTransitionTask() {
-  const invalidate = useInvalidateTasks()
-  return useMutation({ mutationFn: taskApi.transition, onSuccess: invalidate })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: taskApi.transition,
+    onSuccess: (_task, { taskId }) => invalidateAfterTransition(queryClient, taskId),
+  })
 }
