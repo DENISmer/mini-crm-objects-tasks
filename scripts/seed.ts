@@ -54,7 +54,12 @@ async function ensureUser(user: SeedUser): Promise<string> {
   if (error) throw error
   const existing = data.users.find((u) => u.email === user.email)
   if (existing) {
-    console.log(`= ${user.email} уже существует`)
+    // Пароль подтягиваем к SEED_PASSWORD: так его можно сменить, не пересоздавая пользователей.
+    const { error: updateError } = await admin.auth.admin.updateUserById(existing.id, {
+      password: SEED_PASSWORD,
+    })
+    if (updateError) throw updateError
+    console.log(`= ${user.email} уже существует, пароль обновлён`)
     return existing.id
   }
   const { data: created, error: createError } = await admin.auth.admin.createUser({
