@@ -7,13 +7,14 @@
  * и читается из .env.seed.local, который не попадает в репозиторий.
  *
  * Запуск: npm run seed
+ * Для другого окружения: SEED_ENV_FILE=.env.seed.cloud.local npm run seed
  */
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { config as loadEnv } from 'dotenv'
 
 import type { Database } from '../src/shared/api/database.types.ts'
 
-loadEnv({ path: '.env.seed.local' })
+loadEnv({ path: process.env.SEED_ENV_FILE ?? '.env.seed.local' })
 
 function requireEnv(name: string): string {
   const value = process.env[name]

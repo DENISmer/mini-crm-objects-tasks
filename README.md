@@ -114,14 +114,19 @@ npx supabase link --project-ref <project-ref>
 npx supabase db push
 ```
 
-3. Заполните `.env.seed.local` значениями облачного проекта (URL, anon key, service_role key) и
-   выполните `npm run seed`. Файл `.env.seed.local` в репозиторий не попадает (`*.local` в
-   `.gitignore`), service_role key нигде, кроме него, не хранится.
-4. Задеплойте фронтенд, задав переменные `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`:
-   - **Vercel**: импорт репозитория, фреймворк Vite определяется автоматически, `vercel.json`
-     содержит SPA-rewrite.
-   - **Railway**: сервис из репозитория собирается по `Dockerfile` (nginx с SPA-fallback, порт из
-     `$PORT`). Переменные сервиса автоматически подставляются в сборку.
+3. Создайте `.env.seed.cloud.local` со значениями облачного проекта (URL, anon key, service_role
+   key, пароль демо-пользователей) и выполните:
+
+```bash
+SEED_ENV_FILE=.env.seed.cloud.local npm run seed
+```
+
+Файлы `*.local` в репозиторий не попадают, service_role key нигде, кроме них, не хранится. 4. Задеплойте фронтенд, задав переменные `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`:
+
+- **Vercel**: импорт репозитория, фреймворк Vite определяется автоматически, `vercel.json`
+  содержит SPA-rewrite.
+- **Railway**: сервис из репозитория собирается по `Dockerfile` (nginx с SPA-fallback, порт из
+  `$PORT`). Переменные сервиса автоматически подставляются в сборку.
 
 Пользователей можно создавать и вручную в **Authentication → Users**. Такой пользователь получит роль
 исполнителя; чтобы сделать его постановщиком, поменяйте `role` в таблице `profiles` или добавьте
