@@ -1,0 +1,16 @@
+server {
+    listen ${PORT};
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # SPA: любой путь отдаёт index.html, маршрутизация на клиенте.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Хэшированные ассеты Vite можно кэшировать надолго.
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
