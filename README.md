@@ -7,8 +7,8 @@
 - Стек: React 19 + TypeScript (Vite), Supabase (Postgres, Auth, PostgREST), shadcn/ui + Tailwind,
   TanStack Query, react-hook-form + zod.
 - Тесты: pgTAP для прав доступа и машины состояний (`supabase/tests`), Vitest для клиентской логики.
-- Документы сдачи: [docs/DECISIONS.md](docs/DECISIONS.md) (решения и допущения),
-  [docs/EXPLANATION.md](docs/EXPLANATION.md) (объяснение для руководителя).
+- Документы сдачи: [docs/HANDIN.md](docs/HANDIN.md) (сообщение для сдачи: доступы, объяснение для
+  руководителя, краткие решения), [docs/DECISIONS.md](docs/DECISIONS.md) (полный список решений и допущений).
 
 ## Как устроено
 
