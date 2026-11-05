@@ -100,6 +100,8 @@ npm run test:db
 
 ## Облачный Supabase и деплой
 
+Рабочий экземпляр: <к>. Демо-пользователи из таблицы выше.
+
 1. Создайте проект на [supabase.com](https://supabase.com). В **Authentication → Sign In / Providers**
    выключите _Allow new users to sign up_.
 2. Примените миграции:
